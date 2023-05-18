@@ -26,8 +26,8 @@ class MarketActivity : AppCompatActivity(), MarketAdapter.RecyclerCallBack {
         setContentView(binding.root)
 
 
-        // Initialize api in Ui
-        initUi()
+        // Initialize and refresh api in Ui
+        onResume()
 
         // Show more coins in live coin watch
         binding.layoutWatchList.btnShowMore.setOnClickListener {
@@ -50,7 +50,13 @@ class MarketActivity : AppCompatActivity(), MarketAdapter.RecyclerCallBack {
         }
     }
 
+    // Initialize and refresh ui fun
+    override fun onResume() {
+        super.onResume()
+        initUi()
+    }
 
+    // Ui page design
     private fun initUi() {
 
         getNewsFromApi()
