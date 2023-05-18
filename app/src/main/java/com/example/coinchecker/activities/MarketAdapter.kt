@@ -28,12 +28,21 @@ class MarketAdapter(
         fun bindViews(dataCoin: CoinsData.Data) {
 
             binding.txtCoinName.text = dataCoin.coinInfo.fullName
+            binding.txtPrice.text = dataCoin.dISPLAY.uSD.pRICE
 
-           if ("${dataCoin.rAW.uSD.pRICE}".length >= 8) {
-                binding.txtPrice.text = "$${dataCoin.rAW.uSD.pRICE}".substring(0,8)
-            } else {
-               binding.txtPrice.text = "$${dataCoin.rAW.uSD.pRICE}"
-            }
+
+            /*
+
+           ## if we would use raw instead of display, we would have to use these codes to show
+            better because of their format differences .
+
+            if ("${dataCoin.rAW.uSD.pRICE}".length >= 8) {
+                 binding.txtPrice.text = "$${dataCoin.rAW.uSD.pRICE}".substring(0,8)
+             } else {
+                binding.txtPrice.text = "$${dataCoin.rAW.uSD.pRICE}"
+             }
+
+             */
 
             val taghir = dataCoin.rAW.uSD.cHANGEPCT24HOUR
 
@@ -46,7 +55,7 @@ class MarketAdapter(
                     )
                 )
 
-                binding.txtTaghir.text= "${dataCoin.rAW.uSD.cHANGEPCT24HOUR}".substring(0,4) + "%"
+                binding.txtTaghir.text = "${dataCoin.rAW.uSD.cHANGEPCT24HOUR}".substring(0, 4) + "%"
 
 
             } else if (taghir < 0) {
@@ -58,15 +67,15 @@ class MarketAdapter(
                     )
                 )
 
-                binding.txtTaghir.text = "${dataCoin.rAW.uSD.cHANGEPCT24HOUR}".substring(0,5) + "%"
+                binding.txtTaghir.text = "${dataCoin.rAW.uSD.cHANGEPCT24HOUR}".substring(0, 5) + "%"
 
-            } else if (taghir == 0.0){
+            } else if (taghir == 0.0) {
                 binding.txtTaghir.text = "0%"
             }
 
             val marketCap = (dataCoin.rAW.uSD.mKTCAP / 1000000000).toString()
             val index = marketCap.indexOf('.')
-            binding.txtMarketCap.text = "$" + marketCap.substring(0,index+3) + " B"
+            binding.txtMarketCap.text = "$" + marketCap.substring(0, index + 3) + " B"
 
 
             //    "% ${dataCoin.rAW.uSD.cHANGEPCT24HOUR}"

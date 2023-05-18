@@ -26,6 +26,9 @@ class MarketActivity : AppCompatActivity(), MarketAdapter.RecyclerCallBack {
         setContentView(binding.root)
 
 
+        binding.layoutToolbar.toolBar.title = "CryptoChecker"
+
+
         // Initialize and refresh api in Ui
         onResume()
 
@@ -120,7 +123,7 @@ class MarketActivity : AppCompatActivity(), MarketAdapter.RecyclerCallBack {
 
     override fun onCoinItemClicked(dataCoin: CoinsData.Data) {
         val intent = Intent(this, CoinActivity::class.java)
-        intent.putExtra("Data to send", dataCoin)
+        intent.putExtra("DataToSend", dataCoin)
         startActivity(intent)
 
     }
