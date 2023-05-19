@@ -74,6 +74,7 @@ class CoinActivity : AppCompatActivity() {
         }
 
     }
+    /// just test
 
     private fun openWebsiteCoin(url: String) {
 
