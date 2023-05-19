@@ -11,14 +11,21 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.coinchecker.apiManager.ApiCallback
 import com.example.coinchecker.apiManager.ApiManager
+import com.example.coinchecker.apiManager.model.CoinAboutData
+import com.example.coinchecker.apiManager.model.CoinAboutData2
+import com.example.coinchecker.apiManager.model.CoinAboutData3
+import com.example.coinchecker.apiManager.model.CoinAboutItem
 import com.example.coinchecker.apiManager.model.CoinsData
 import com.example.coinchecker.databinding.ActivityMarketBinding
+import com.google.gson.Gson
 
 class MarketActivity : AppCompatActivity(), MarketAdapter.RecyclerCallBack {
 
     lateinit var binding: ActivityMarketBinding
     private lateinit var dataNews: ArrayList<Pair<String, String>>
+    lateinit var dataAboutMap: MutableMap<String, CoinAboutItem>
     private val apiManager = ApiManager()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,21 +58,46 @@ class MarketActivity : AppCompatActivity(), MarketAdapter.RecyclerCallBack {
                 }, 900
             )
         }
-    }
 
-    // Initialize and refresh ui fun
+        getAboutDataFromAsset()
+    }
     override fun onResume() {
         super.onResume()
         initUi()
     }
 
-    // Ui page design
+
+    // Base Ui for market activity
     private fun initUi() {
 
         getNewsFromApi()
         getTopCoinsFromApi()
     }
 
+    // Convert json file from api to kotlin class to use for coin activity
+    private fun getAboutDataFromAsset() {
+
+        // Convert json from api to kotlin class
+        val fileInString = applicationContext.assets.open("currencyinfo.json").bufferedReader().use { it.readText() }
+
+
+        dataAboutMap = mutableMapOf<String, CoinAboutItem>()
+        val gson = Gson()
+        val dataAboutAll = gson.fromJson(fileInString, CoinAboutData::class.java)!!
+        dataAboutAll.forEach {
+
+            dataAboutMap[it.currencyName] = CoinAboutItem(
+                it.info.web,
+                it.info.github,
+                it.info.twt,
+                it.info.desc,
+                it.info.reddit
+            )
+        }
+
+    }
+
+    // For recycler view in activity market
     private fun getTopCoinsFromApi() {
 
         apiManager.getCoinsList(object : ApiCallback<List<CoinsData.Data>> {
@@ -82,7 +114,6 @@ class MarketActivity : AppCompatActivity(), MarketAdapter.RecyclerCallBack {
 
         })
     }
-
     private fun showDataInRecycler(data: List<CoinsData.Data>) {
 
         val marketAdapter = MarketAdapter(ArrayList(data), this)
@@ -91,6 +122,7 @@ class MarketActivity : AppCompatActivity(), MarketAdapter.RecyclerCallBack {
         binding.layoutWatchList.recyclerMain.layoutManager = LinearLayoutManager(this)
     }
 
+    // For news in activity market
     private fun getNewsFromApi() {
 
         apiManager.getNews(object : ApiCallback<ArrayList<Pair<String, String>>> {
@@ -106,7 +138,6 @@ class MarketActivity : AppCompatActivity(), MarketAdapter.RecyclerCallBack {
         })
 
     }
-
     private fun refreshNews() {
 
         val randomAccess = (0..49).random()
@@ -121,9 +152,14 @@ class MarketActivity : AppCompatActivity(), MarketAdapter.RecyclerCallBack {
         }
     }
 
+    // Intent to coin activity from market activity
     override fun onCoinItemClicked(dataCoin: CoinsData.Data) {
         val intent = Intent(this, CoinActivity::class.java)
-        intent.putExtra("DataToSend", dataCoin)
+
+        val bundle = Bundle()
+        bundle.putParcelable("bundle1", dataCoin)
+        bundle.putParcelable("bundle2", dataAboutMap[dataCoin.coinInfo.name])
+        intent.putExtra("bundle", bundle)
         startActivity(intent)
 
     }
