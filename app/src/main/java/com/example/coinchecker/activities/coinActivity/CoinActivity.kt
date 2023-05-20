@@ -5,8 +5,8 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.example.coinchecker.R
 import com.example.coinchecker.apiManager.ALL
 import com.example.coinchecker.apiManager.ApiCallback
@@ -21,7 +21,6 @@ import com.example.coinchecker.apiManager.YEAR
 import com.example.coinchecker.apiManager.model.ChartData
 import com.example.coinchecker.apiManager.model.CoinAboutItem
 import com.example.coinchecker.apiManager.model.CoinsData
-import com.example.coinchecker.apiManager.model.NewsData
 import com.example.coinchecker.databinding.ActivityCoinBinding
 
 class CoinActivity : AppCompatActivity() {
@@ -57,10 +56,10 @@ class CoinActivity : AppCompatActivity() {
 
     // Initialize ui from api for coin activity
     private fun initUi() {
+
         initChartUi()
         initAboutUi()
         initStatisticsUi()
-
     }
 
     @SuppressLint("SetTextI18n")
@@ -110,19 +109,158 @@ class CoinActivity : AppCompatActivity() {
 
     private fun initChartUi() {
 
-
         var period: String = HOUR
         requestAndShowChart(period)
+
         binding.layoutChart.radioGroupeMain.setOnCheckedChangeListener { _, checkedId ->
 
             when (checkedId) {
 
                 R.id.radio1Hour -> {
                     period = HOUR
+                    binding.layoutChart.txtChartPrice.text = dataThisCoin.dISPLAY.uSD.pRICE
+                    binding.layoutChart.txtChartChangePercent.text =
+                        "${dataThisCoin.dISPLAY.uSD.cHANGEPCT24HOUR}%"
+                    binding.layoutChart.txtChartChangePrice.text =
+                        dataThisCoin.dISPLAY.uSD.cHANGE24HOUR
+
+                    val changeHours24 = dataThisCoin.rAW.uSD.cHANGEPCT24HOUR
+
+                    if (changeHours24 > 0) {
+
+                        binding.layoutChart.txtChartChangePercent.setTextColor(
+                            ContextCompat.getColor(
+                                binding.root.context,
+                                R.color.colorGain
+                            )
+                        )
+
+                        binding.layoutChart.txtChartUpDown.setTextColor(
+                            ContextCompat.getColor(
+                                binding.root.context,
+                                R.color.colorGain
+                            )
+                        )
+
+                        binding.layoutChart.txtChartUpDown.text = "▲"
+
+                        binding.layoutChart.sparkViewChart.lineColor = ContextCompat.getColor(
+                            binding.root.context,
+                            R.color.colorGain
+                        )
+
+                    } else if (changeHours24 < 0) {
+
+                        binding.layoutChart.txtChartChangePercent.setTextColor(
+                            ContextCompat.getColor(
+                                binding.root.context,
+                                R.color.colorLoss
+                            )
+                        )
+
+                        binding.layoutChart.txtChartUpDown.setTextColor(
+                            ContextCompat.getColor(
+                                binding.root.context,
+                                R.color.colorLoss
+                            )
+                        )
+                        binding.layoutChart.txtChartUpDown.text = "▼"
+
+                        binding.layoutChart.sparkViewChart.lineColor = ContextCompat.getColor(
+                            binding.root.context,
+                            R.color.colorLoss
+                        )
+
+
+                    } else if (changeHours24 == 0.0) {
+                        binding.layoutChart.txtChartChangePercent.setTextColor(
+                            ContextCompat.getColor(
+                                binding.root.context,
+                                R.color.tertiaryTextColor
+                            )
+                        )
+
+                        binding.layoutChart.txtChartUpDown.text = ""
+
+                        binding.layoutChart.sparkViewChart.lineColor = ContextCompat.getColor(
+                            binding.root.context,
+                            R.color.tertiaryTextColor
+                        )
+
+                    }
                 }
 
                 R.id.radio1Day -> {
                     period = HOURS24
+                    binding.layoutChart.txtChartPrice.text = dataThisCoin.dISPLAY.uSD.pRICE
+                    binding.layoutChart.txtChartChangePercent.text =
+                        "${dataThisCoin.dISPLAY.uSD.cHANGEPCTDAY}%"
+                    binding.layoutChart.txtChartChangePrice.text =
+                        dataThisCoin.dISPLAY.uSD.cHANGEDAY
+
+                    val changeDay = dataThisCoin.rAW.uSD.cHANGEPCTDAY
+
+                    if (changeDay > 0) {
+
+                        binding.layoutChart.txtChartChangePercent.setTextColor(
+                            ContextCompat.getColor(
+                                binding.root.context,
+                                R.color.colorGain
+                            )
+                        )
+
+                        binding.layoutChart.txtChartUpDown.setTextColor(
+                            ContextCompat.getColor(
+                                binding.root.context,
+                                R.color.colorGain
+                            )
+                        )
+
+                        binding.layoutChart.txtChartUpDown.text = "▲"
+
+                        binding.layoutChart.sparkViewChart.lineColor = ContextCompat.getColor(
+                            binding.root.context,
+                            R.color.colorGain
+                        )
+
+                    } else if (changeDay < 0) {
+
+                        binding.layoutChart.txtChartChangePercent.setTextColor(
+                            ContextCompat.getColor(
+                                binding.root.context,
+                                R.color.colorLoss
+                            )
+                        )
+
+                        binding.layoutChart.txtChartUpDown.setTextColor(
+                            ContextCompat.getColor(
+                                binding.root.context,
+                                R.color.colorLoss
+                            )
+                        )
+                        binding.layoutChart.txtChartUpDown.text = "▼"
+
+                        binding.layoutChart.sparkViewChart.lineColor = ContextCompat.getColor(
+                            binding.root.context,
+                            R.color.colorLoss
+                        )
+
+
+                    } else if (changeDay == 0.0) {
+                        binding.layoutChart.txtChartChangePercent.setTextColor(
+                            ContextCompat.getColor(
+                                binding.root.context,
+                                R.color.tertiaryTextColor
+                            )
+                        )
+
+                        binding.layoutChart.txtChartUpDown.text = ""
+
+                        binding.layoutChart.sparkViewChart.lineColor = ContextCompat.getColor(
+                            binding.root.context,
+                            R.color.tertiaryTextColor
+                        )
+                    }
                 }
 
                 R.id.radio1Week -> {
@@ -148,13 +286,92 @@ class CoinActivity : AppCompatActivity() {
             requestAndShowChart(period)
         }
 
+        binding.layoutChart.txtChartPrice.text = dataThisCoin.dISPLAY.uSD.pRICE
+        binding.layoutChart.txtChartChangePercent.text =
+            "${dataThisCoin.dISPLAY.uSD.cHANGEPCT24HOUR}%"
+        binding.layoutChart.txtChartChangePrice.text = dataThisCoin.dISPLAY.uSD.cHANGE24HOUR
 
 
+        val changeHours24 = dataThisCoin.rAW.uSD.cHANGEPCT24HOUR
+
+        if (changeHours24 > 0) {
+
+            binding.layoutChart.txtChartChangePercent.setTextColor(
+                ContextCompat.getColor(
+                    binding.root.context,
+                    R.color.colorGain
+                )
+            )
+
+            binding.layoutChart.txtChartUpDown.setTextColor(
+                ContextCompat.getColor(
+                    binding.root.context,
+                    R.color.colorGain
+                )
+            )
+
+            binding.layoutChart.txtChartUpDown.text = "▲"
+
+            binding.layoutChart.sparkViewChart.lineColor = ContextCompat.getColor(
+                binding.root.context,
+                R.color.colorGain
+            )
+
+        } else if (changeHours24 < 0) {
+
+            binding.layoutChart.txtChartChangePercent.setTextColor(
+                ContextCompat.getColor(
+                    binding.root.context,
+                    R.color.colorLoss
+                )
+            )
+
+            binding.layoutChart.txtChartUpDown.setTextColor(
+                ContextCompat.getColor(
+                    binding.root.context,
+                    R.color.colorLoss
+                )
+            )
+            binding.layoutChart.txtChartUpDown.text = "▼"
+
+            binding.layoutChart.sparkViewChart.lineColor = ContextCompat.getColor(
+                binding.root.context,
+                R.color.colorLoss
+            )
+
+
+        } else if (changeHours24 == 0.0) {
+            binding.layoutChart.txtChartChangePercent.setTextColor(
+                ContextCompat.getColor(
+                    binding.root.context,
+                    R.color.tertiaryTextColor
+                )
+            )
+
+            binding.layoutChart.txtChartUpDown.text = ""
+
+            binding.layoutChart.sparkViewChart.lineColor = ContextCompat.getColor(
+                binding.root.context,
+                R.color.tertiaryTextColor
+            )
+        }
+
+
+
+        binding.layoutChart.sparkViewChart.setScrubListener {
+
+            if (it == null) {
+                binding.layoutChart.txtChartPrice.text = dataThisCoin.dISPLAY.uSD.pRICE
+            } else {
+                binding.layoutChart.txtChartPrice.text = "$${(it as ChartData.Data).close}"
+            }
+
+        }
 
 
     }
 
-    private fun requestAndShowChart(period:String) {
+    private fun requestAndShowChart(period: String) {
 
         apiManager.getChartData(
             dataThisCoin.coinInfo.name,

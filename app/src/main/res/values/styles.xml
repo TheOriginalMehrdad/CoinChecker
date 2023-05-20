@@ -101,7 +101,7 @@
 
     <style name="MySparkViewStyle" parent="@style/spark_SparkView">
         <item name="spark_lineColor">@color/colorPrimary</item>
-        <item name="spark_lineWidth">5dp</item>
+        <item name="spark_lineWidth">3dp</item>
         <item name="spark_fill">false</item>
         <item name="spark_baseLineColor">@color/colorPrimary</item>
     </style>
