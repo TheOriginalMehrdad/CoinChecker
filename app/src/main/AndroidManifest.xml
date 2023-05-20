@@ -16,10 +16,10 @@
         android:theme="@style/AppTheme"
         tools:targetApi="31">
         <activity
-            android:name=".activities.CoinActivity"
+            android:name=".activities.coinActivity.CoinActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.MarketActivity"
+            android:name=".activities.marketActivity.MarketActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

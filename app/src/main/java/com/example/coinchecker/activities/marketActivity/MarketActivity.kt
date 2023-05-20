@@ -1,4 +1,4 @@
-package com.example.coinchecker.activities
+package com.example.coinchecker.activities.marketActivity
 
 import android.content.Intent
 import android.net.Uri
@@ -6,14 +6,12 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.coinchecker.activities.coinActivity.CoinActivity
 import com.example.coinchecker.apiManager.ApiCallback
 import com.example.coinchecker.apiManager.ApiManager
 import com.example.coinchecker.apiManager.model.CoinAboutData
-import com.example.coinchecker.apiManager.model.CoinAboutData2
-import com.example.coinchecker.apiManager.model.CoinAboutData3
 import com.example.coinchecker.apiManager.model.CoinAboutItem
 import com.example.coinchecker.apiManager.model.CoinsData
 import com.example.coinchecker.databinding.ActivityMarketBinding

@@ -1,11 +1,24 @@
-package com.example.coinchecker.activities
+package com.example.coinchecker.activities.coinActivity
 
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
+import com.example.coinchecker.R
+import com.example.coinchecker.apiManager.ALL
+import com.example.coinchecker.apiManager.ApiCallback
+import com.example.coinchecker.apiManager.ApiManager
 import com.example.coinchecker.apiManager.BASE_TWITTER_URL
+import com.example.coinchecker.apiManager.HOUR
+import com.example.coinchecker.apiManager.HOURS24
+import com.example.coinchecker.apiManager.MONTH
+import com.example.coinchecker.apiManager.MONTH3
+import com.example.coinchecker.apiManager.WEEK
+import com.example.coinchecker.apiManager.YEAR
+import com.example.coinchecker.apiManager.model.ChartData
 import com.example.coinchecker.apiManager.model.CoinAboutItem
 import com.example.coinchecker.apiManager.model.CoinsData
 import com.example.coinchecker.apiManager.model.NewsData
@@ -16,6 +29,7 @@ class CoinActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCoinBinding
     private lateinit var dataThisCoin: CoinsData.Data
     private lateinit var dataThisCoinAbout: CoinAboutItem
+    val apiManager = ApiManager()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,8 +55,9 @@ class CoinActivity : AppCompatActivity() {
         initUi()
     }
 
+    // Initialize ui from api for coin activity
     private fun initUi() {
-        // initChartUi()
+        initChartUi()
         initAboutUi()
         initStatisticsUi()
 
@@ -74,7 +89,6 @@ class CoinActivity : AppCompatActivity() {
         }
 
     }
-    //  justff test
 
     private fun openWebsiteCoin(url: String) {
 
@@ -95,6 +109,67 @@ class CoinActivity : AppCompatActivity() {
     }
 
     private fun initChartUi() {
-        TODO("Not yet implemented")
+
+
+        var period: String = HOUR
+        requestAndShowChart(period)
+        binding.layoutChart.radioGroupeMain.setOnCheckedChangeListener { _, checkedId ->
+
+            when (checkedId) {
+
+                R.id.radio1Hour -> {
+                    period = HOUR
+                }
+
+                R.id.radio1Day -> {
+                    period = HOURS24
+                }
+
+                R.id.radio1Week -> {
+                    period = WEEK
+                }
+
+                R.id.radio1Month -> {
+                    period = MONTH
+                }
+
+                R.id.radio3Month -> {
+                    period = MONTH3
+                }
+
+                R.id.radio1Year -> {
+                    period = YEAR
+                }
+
+                R.id.radioAll -> {
+                    period = ALL
+                }
+            }
+            requestAndShowChart(period)
+        }
+
+
+
+
+
+    }
+
+    private fun requestAndShowChart(period:String) {
+
+        apiManager.getChartData(
+            dataThisCoin.coinInfo.name,
+            period,
+            object : ApiCallback<Pair<List<ChartData.Data>, ChartData.Data?>> {
+                override fun onSuccess(data: Pair<List<ChartData.Data>, ChartData.Data?>) {
+
+                    val chartAdapter = ChartAdapter(data.first, data.second?.open.toString())
+                    binding.layoutChart.sparkViewChart.adapter = chartAdapter
+
+                }
+
+                override fun onError(errorMessage: String) {
+                    Toast.makeText(this@CoinActivity, errorMessage, Toast.LENGTH_SHORT).show()
+                }
+            })
     }
 }

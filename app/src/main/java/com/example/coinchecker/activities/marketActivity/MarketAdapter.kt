@@ -1,15 +1,11 @@
-package com.example.coinchecker.activities
+package com.example.coinchecker.activities.marketActivity
 
-import android.annotation.SuppressLint
-import android.content.Context
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.R
 import com.example.coinchecker.apiManager.BASE_URL_IMAGE
 import com.example.coinchecker.apiManager.model.CoinsData
 import com.example.coinchecker.databinding.ItemRecyclerMarketBinding
